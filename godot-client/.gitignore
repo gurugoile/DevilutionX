@@ -1,0 +1,13 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Generierte Godot-Dateien
+*.import
+
+# Temporäre Dungeon-Daten
+dungeon_*.json
+
+# Manuelle Sicherungskopien
+*.bak
+*.bak[0-9]*

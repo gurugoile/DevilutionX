@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://btkro6mgqtlgv"]
+
+[ext_resource type="Script" uid="uid://d8g2cnkb7k6c" path="res://dungeon.gd" id="1_6elmv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_d6vja"]
+size = Vector3(10, 0.2, 10)
+
+[node name="dungeon" type="Node3D" unique_id=329308414]
+script = ExtResource("1_6elmv")
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1252671792]
+visible = false
+mesh = SubResource("BoxMesh_d6vja")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=384304709]
+transform = Transform3D(0.70710677, -0.4999999, 0.4999999, 0, 0.7071067, 0.7071067, -0.70710677, -0.4999999, 0.4999999, 0, 10, 0)
+current = true
+fov = 65.1
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=958038535]
+transform = Transform3D(0.76604444, -0.532895, 0.35944223, 0, 0.5591929, 0.82903755, -0.6427876, -0.6350796, 0.4283666, -55, 45, 0)
+light_energy = 2.046
+light_indirect_energy = 3.928
