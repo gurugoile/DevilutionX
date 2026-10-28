@@ -11,39 +11,10 @@
 
 namespace devilution {
 
-void ExportDungeon(uint32_t seed)
+
+static void WriteDungeonJson(FILE *file, uint32_t seed)
 {
-    const char *home = std::getenv("HOME");
-    if (home == nullptr)
-        return;
-
-    const std::filesystem::path dir =
-        std::filesystem::path(home) / "Diablo3D_exports";
-
-    std::error_code error;
-    std::filesystem::create_directories(dir, error);
-    if (error)
-        return;
-
-    FILE *file = nullptr;
-
-    for (unsigned number = 1; number <= 999999; ++number) {
-        char name[64];
-        std::snprintf(name, sizeof(name),
-            "dungeon_%06u.json", number);
-
-        const auto path = dir / name;
-
-        // "x" verhindert das Überschreiben vorhandener Dateien.
-        file = std::fopen(path.string().c_str(), "wx");
-        if (file != nullptr)
-            break;
-    }
-
-    if (file == nullptr)
-        return;
-
-    std::fprintf(file, "{\n  \"seed\": %u,\n", seed);
+std::fprintf(file, "{\n  \"seed\": %u,\n", seed);
 
     std::fprintf(file, "  \"dungeon\": [\n");
     for (int y = 0; y < DMAXY; ++y) {
@@ -108,7 +79,54 @@ std::fprintf(file,
 }
 
 std::fprintf(file, "\n  ]\n}\n");
+}
+
+void ExportDungeon(uint32_t seed)
+{
+    const char *home = std::getenv("HOME");
+    if (home == nullptr)
+        return;
+
+    const std::filesystem::path dir =
+        std::filesystem::path(home) / "Diablo3D_exports";
+
+    std::error_code error;
+    std::filesystem::create_directories(dir, error);
+    if (error)
+        return;
+
+    FILE *file = nullptr;
+
+    for (unsigned number = 1; number <= 999999; ++number) {
+        char name[64];
+        std::snprintf(name, sizeof(name),
+            "dungeon_%06u.json", number);
+
+        const auto path = dir / name;
+
+        // "x" verhindert das Überschreiben vorhandener Dateien.
+        file = std::fopen(path.string().c_str(), "wx");
+        if (file != nullptr)
+            break;
+    }
+
+    if (file == nullptr)
+        return;
+
+    WriteDungeonJson(file, seed);
     std::fclose(file);
+char *buffer = nullptr;
+size_t size = 0;
+
+FILE *memory = open_memstream(&buffer, &size);
+if (memory != nullptr) {
+    WriteDungeonJson(memory, seed);
+    std::fclose(memory);
+
+    std::printf("Dungeon im Speicher: %zu Bytes\n", size);
+
+    std::free(buffer);
+}
 }
 
 }
