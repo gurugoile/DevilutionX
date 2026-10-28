@@ -118,7 +118,8 @@
 #include "utils/status_macros.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
-
+#include "dungeon_export.hpp"
+#include "dungeon_live.hpp"
 #ifndef USE_SDL1
 #include "controls/touch/gamepad.h"
 #include "controls/touch/renderers.h"
@@ -1566,6 +1567,7 @@ void GameLogic()
 	pfile_update(false);
 
 	plrctrls_after_game_logic();
+        UpdateDungeonLive();
 }
 
 void TimeoutCursor(bool bTimeout)
@@ -3484,6 +3486,8 @@ std::expected<void, std::string> LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	CompleteProgress();
 
 	MarkWalkabilityChanged();
+	if (leveltype != DTYPE_TOWN)
+		ExportDungeon(DungeonSeeds[currlevel]);
 	LoadGameLevelCalculateCursor();
 	return {};
 }
